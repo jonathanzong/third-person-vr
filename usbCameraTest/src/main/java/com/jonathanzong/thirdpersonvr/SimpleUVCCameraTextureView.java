@@ -21,7 +21,7 @@
  *  may have a different license, see the respective files.
  */
 
-package com.serenegiant.widget;
+package com.jonathanzong.thirdpersonvr;
 
 import android.content.Context;
 import android.util.AttributeSet;
