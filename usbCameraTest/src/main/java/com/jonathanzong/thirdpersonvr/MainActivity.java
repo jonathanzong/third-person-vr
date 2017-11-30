@@ -46,7 +46,6 @@ import com.serenegiant.common.BaseActivity;
 import com.serenegiant.usb.CameraDialog;
 import com.serenegiant.usb.IButtonCallback;
 import com.serenegiant.usb.IFrameCallback;
-import com.serenegiant.usb.IStatusCallback;
 import com.serenegiant.usb.USBMonitor;
 import com.serenegiant.usb.USBMonitor.OnDeviceConnectListener;
 import com.serenegiant.usb.USBMonitor.UsbControlBlock;
@@ -70,8 +69,6 @@ public final class MainActivity
     // for accessing USB and USB camera
     private USBMonitor mUSBMonitor;
 	private UVCCamera mUVCCamera;
-//	private SimpleUVCCameraTextureView mUVCCameraView1, mUVCCameraView2;
-	private ImageView mImageView1, mImageView2;
 	// for open&start / stop&close camera preview
 	private ImageButton mCameraButton;
 	private Surface mPreviewSurface;
@@ -255,10 +252,6 @@ public final class MainActivity
 				mUSBMonitor = null;
 			}
 		}
-//		mUVCCameraView1 = null;
-//		mUVCCameraView2 = null;
-		mImageView1 = null;
-		mImageView2 = null;
 		mCameraButton = null;
 		super.onDestroy();
 	}
@@ -292,30 +285,6 @@ public final class MainActivity
 				public void run() {
 					final UVCCamera camera = new UVCCamera();
 					camera.open(ctrlBlock);
-					camera.setStatusCallback(new IStatusCallback() {
-						@Override
-						public void onStatus(final int statusClass, final int event, final int selector,
-											 final int statusAttribute, final ByteBuffer data) {
-							runOnUiThread(new Runnable() {
-								@Override
-								public void run() {
-									final Toast toast = Toast.makeText(MainActivity.this, "onStatus(statusClass=" + statusClass
-											+ "; " +
-											"event=" + event + "; " +
-											"selector=" + selector + "; " +
-											"statusAttribute=" + statusAttribute + "; " +
-											"data=...)", Toast.LENGTH_SHORT);
-									synchronized (mSync) {
-										if (mToast != null) {
-											mToast.cancel();
-										}
-										toast.show();
-										mToast = toast;
-									}
-								}
-							});
-						}
-					});
 					camera.setButtonCallback(new IButtonCallback() {
 						@Override
 						public void onButton(final int button, final int state) {
@@ -390,7 +359,6 @@ public final class MainActivity
 		synchronized (mSync) {
 			if (mUVCCamera != null) {
 				try {
-					mUVCCamera.setStatusCallback(null);
 					mUVCCamera.setButtonCallback(null);
 					mUVCCamera.close();
 					mUVCCamera.destroy();

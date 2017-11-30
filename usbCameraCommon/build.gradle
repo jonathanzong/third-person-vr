@@ -51,5 +51,4 @@ dependencies {
         exclude module: 'support-v4'
     }
     compile project(':libuvccamera')
-    compile files('libs/cardboard.jar')
 }
